@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Only_one_3rd</fullName>
+    <active>true</active>
+    <description>There can be only one 3nd place.</description>
+    <errorConditionFormula>Podium_Third__c &lt;&gt; NULL  &amp;&amp; (Podium_Third__c = Winer__c  ||  Podium_Third__c = Podium_Second__c)</errorConditionFormula>
+    <errorMessage>There can be only one 3nd place.
+Are you trying to put the same driver into a couple of positions on the scoreboard?</errorMessage>
+</ValidationRule>

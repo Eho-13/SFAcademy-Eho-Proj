@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Only_one_winner</fullName>
+    <active>true</active>
+    <description>There can be only one winner.</description>
+    <errorConditionFormula>Winer__c &lt;&gt; NULL  &amp;&amp; (Winer__c = Podium_Second__c  ||  Winer__c = Podium_Third__c)</errorConditionFormula>
+    <errorMessage>There can be only one winner.
+Are you trying to put the same driver into a couple of positions on the scoreboard?</errorMessage>
+</ValidationRule>

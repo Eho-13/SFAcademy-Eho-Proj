@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Winer__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>1st place</description>
+    <externalId>false</externalId>
+    <label>Winer</label>
+    <referenceTo>Driver__c</referenceTo>
+    <relationshipLabel>Races</relationshipLabel>
+    <relationshipName>Race_1st_place</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
