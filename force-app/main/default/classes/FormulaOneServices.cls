@@ -1,11 +1,11 @@
 public class FormulaOneServices {
     public static String generateKey (SObject record, List<SObjectField> fields, String separator){
-  		SObject record = new sObject();
+
         List<String> stringFields = new List<String>();
 		stringFields.add(
             record.get(fields)
         );
-    string key;
+        string key;
         for(String s: stringFields){
             Key = Key + separator + s;
         }
