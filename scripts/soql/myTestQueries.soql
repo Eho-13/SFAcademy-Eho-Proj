@@ -1,0 +1,7 @@
+//SELECT Name FROM Driver__c WHERE id = 'a027Q0000061zcxQAA';
+
+//SELECT Age__c, CreatedById, Name, First_Name__c, Full_Name__c, Hat_Tricks__c, Is_Qualified__c, LastModifiedById, Last_Name__c, OwnerId FROM Driver__c WHERE id = 'a027Q0000061zcxQAA';
+
+//SELECT CreatedById, Grand_Prix__c, Grid__c, Is_Fastest_Lap__c, LastModifiedById, Position__c, Name, Racer__c FROM Race_Result__c where Racer__c = 'a027Q0000061zcxQAA';
+
+SELECT Grand_Prix__r.Name FROM Race_Result__c WHERE Racer__c = 'a027Q0000061zcxQAA';
