@@ -39,25 +39,23 @@ public class FormulaOneDAO {
         Map<String, list<String>> AllDriversByCircuit = new Map<String, list<String>>();
         List<sObject> raceRezList = new List<sObject>{
             Database.query('SELECT Grand_Prix__r.Name, Racer__r.Name FROM Race_Result__c ORDER BY Grand_Prix__r.Name')
-                };
+		};
         
         String oldRaceName = String.valueOf(raceRezList[0].get('Grand_Prix__r.Name'));
-		String newRaceName = oldRaceName;
-		List<String> curRaceDrivers = new List<String>();
+	String newRaceName = oldRaceName;
+	List<String> curRaceDrivers = new List<String>();
+	    
         For(sObject tempRaceRez: raceRezList){
-
-			
             if(oldRaceName == newRaceName){
                 curRaceDrivers.add(String.valueOf(tempRaceRez.get('Racer__r.Name')));
             } else {
                 AllDriversByCircuit.put(oldRaceName, curRaceDrivers);
-				oldRaceName = newRaceName;
-				curRaceDrivers.clear();
+		oldRaceName = newRaceName;
+		curRaceDrivers.clear();
                 curRaceDrivers.add(String.valueOf(tempRaceRez.get('Racer__r.Name')));
             }
             newRaceName = String.valueOf(tempRaceRez.get('Grand_Prix__r.Name'));
         }
-        
         AllDriversByCircuit.put(oldRaceName, curRaceDrivers);
         return AllDriversByCircuit;
     }
