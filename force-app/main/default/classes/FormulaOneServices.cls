@@ -17,13 +17,6 @@ public class FormulaOneServices {
     }
     
     public static Boolean isHatTrick(Race_Result__c raceResult){
-        if (raceResult.Position__c == 1 && raceResult.Grid__c == 1 && raceResult.Is_Fastest_Lap__c)
-        {
-            return true;
-                } 
-        else 
-        {
-            return false;
-                }       
+    	return (raceResult.Position__c == 1 && raceResult.Grid__c == 1 && raceResult.Is_Fastest_Lap__c);
     }
 }
