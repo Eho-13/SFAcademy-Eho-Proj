@@ -16,7 +16,7 @@ public class FormulaOneDAO {
         set<String> rezSet = new set<String>();
 
         for(sObject tempObj: qrez){
-            rezSet.add(String.valueOf(tempOBj.Grand_Prix__r.Name));
+            rezSet.add(String.valueOf(tempOBj.get('Name')));
         }
 
         return rezSet;
