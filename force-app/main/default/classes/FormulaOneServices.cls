@@ -67,7 +67,7 @@ public class FormulaOneServices {
         }
         
         return drv;
-    }
+    } 
 
     Public static List<Race__c> updateGrandPrixWinners(Set<Id> raceIds){
         list<Race__c> racesCorrection = new List<Race__c>();
