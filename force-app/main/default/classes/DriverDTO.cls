@@ -1,8 +1,8 @@
 public class DriverDTO {
 
-String firstName;
-String lastName;
-Integer age;
+Public String firstName;
+Public String lastName;
+Public Integer age;
 
 public DriverDTO(String firstName, String lastName, Integer age) {
     
