@@ -24,7 +24,6 @@ public class raceResultMultiConditionTriggerHandler {
                               AND Racer__r.id IN :allTriggeredDriversId
                               GROUP BY Racer__r.id];
 
-                              
         for(sObject d: driversHadHatTrick){
             Driver__C tempDriver = new Driver__C();
             tempDriver.id = String.valueOf(d.get('id'));
