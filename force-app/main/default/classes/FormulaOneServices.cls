@@ -1,5 +1,5 @@
 public class FormulaOneServices {
-    public String generateKey (SObject record, List<SObjectField> fields, String separator){
+    public static String generateKey (SObject record, List<SObjectField> fields, String separator){
 
         List<String> stringFields = new List<String>();
         for(SObjectField tempfield: fields){
@@ -8,11 +8,11 @@ public class FormulaOneServices {
         );
         }
 		
-        string key;
+        string key = '';
         for(String s: stringFields){
             Key = Key + separator + s;
         }
-        
+        Key = Key.substring(separator.length());
         return Key; 
     }
     
