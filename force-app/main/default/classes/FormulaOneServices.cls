@@ -20,17 +20,21 @@ public class FormulaOneServices {
     	return (raceResult.Position__c == 1 && raceResult.Grid__c == 1 && raceResult.Is_Fastest_Lap__c);
     }
 
+    //Треба зробити метод для перевірки вхідних значень для DriverDTO
+    
     Public static void createDriver(String firstName, String lastName, Integer age){
-        Driver__c drv = new Driver__c();
+        DriverDTO curDriver = new DriverDTO(firstName, lastName, age);
         
-        drv.First_Name__c = firstName;
-        drv.Last_Name__c = lastName;
-        drv.Age__C = age;
+        if(DriverDTO.isDriverFieldsNotEmpty(curDriver)){
+            Driver__c drv = new Driver__c();
+        
+            drv = new Driver__c(First_Name__c = firstName, Last_Name__c = lastName, Age__c = age);
 
-        try {
-            insert drv;
-        } catch(DmlException e) {
-            System.debug('FormulaOneServices.createDriver metod err: ' + e.getMessage());
+            try {
+                insert drv;
+            } catch(DmlException e) {
+                System.debug('FormulaOneServices.createDriver metod err: ' + e.getMessage());
+            }
         }
     }
 
@@ -38,15 +42,17 @@ public class FormulaOneServices {
         list<Driver__c> drvList = new List<Driver__c>();
 
         for(DriverDTO d: drivers){
-            
+            /* //Видалити після тестування
             Driver__c drv = new Driver__c();
             drv.First_Name__c = d.firstName;
             drv.Last_Name__c = d.lastName;
             drv.Age__c = d.age;
-            
-            //Driver__c drv = new Driver__c(d.firstName, d.lastName, d.age); //Запитати чи це корректна форма передачі?
             drvList.add(drv);
-            //drvList.add(new Driver__c(d.firstName, d.lastName, d.age)); // теж варіант
+            */
+            if(DriverDTO.isDriverFieldsNotEmpty(d)){
+                drvList.add(new Driver__c(First_Name__c = d.firstName, Last_Name__c = d.lastName, Age__c = d.age));
+            }
+           
         }
         try {
             insert drvList;
@@ -56,16 +62,24 @@ public class FormulaOneServices {
     }
 
     Public static Driver__c updateDriverName(id driverId, String newFirstName, String newLastName){
-        Driver__c drv = [SELECT Id, First_Name__c, Last_Name__c FROM Driver__c WHERE Id = :driverId LIMIT 1];
+        Driver__c drv = new Driver__c();
+        //Зайвий запит
+        /*Driver__c drv = [SELECT Id, First_Name__c, Last_Name__c FROM Driver__c WHERE Id = :driverId LIMIT 1];
         drv.First_Name__c = newFirstName;
-        drv.Last_Name__c = newLastName;
-
-        try {
-            update drv;
-        } catch(DmlException e) {
-            System.debug('FormulaOneServices.updateDriverName metod err: ' + e.getMessage());
-        }
+        drv.Last_Name__c = newLastName;*/
+        // Додав перевірку на НЕпорожні параметри
+        if(driverId != NULL && newFirstName != NULL && newLastName != NULL){
+            drv = new Driver__c(id = driverId, First_Name__c = newFirstName, Last_Name__c = newLastName);
         
+            try {
+                update drv;
+            } catch(DmlException e) {
+                System.debug('FormulaOneServices.updateDriverName update metod err: ' + e.getMessage());
+            }
+
+        } else{
+            System.debug('FormulaOneServices.updateDriverName one or more parametrs is blank');
+        }    
         return drv;
     } 
 
@@ -99,13 +113,13 @@ FROM Race_Result__c WHERE Grand_Prix__r.Id IN :raceIds AND Position__c <= 3]
                 }
             }
         }
-        if(!racesCorrection.isEmpty()){
-            try {
-                update racesCorrection;
-            } catch(DmlException e) {
-                System.debug('FormulaOneServices.updateGrandPrixWinners metod err: ' + e.getMessage());
-            }
+
+        try {
+            update racesCorrection;
+        } catch(DmlException e) {
+            System.debug('FormulaOneServices.updateGrandPrixWinners metod err: ' + e.getMessage());
         }
+
         return racesCorrection;
     }
 
