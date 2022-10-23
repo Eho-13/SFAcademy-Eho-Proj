@@ -74,7 +74,7 @@ private class FormulaOneServicesTest {
       insert raceResultsList;
     }
 
-@isTest 
+    @isTest 
     static void generateKeyTest() {
         //sObject testsObj = new sObject();
         Map <String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
@@ -98,21 +98,108 @@ private class FormulaOneServicesTest {
 
     @isTest
     static void isHatTrickTest(){
-        List<Race_Result__c> raceResultRecords = [SELECT Position__c, Grid__c, Is_Fastest_Lap__c FROM Race_Result__c LIMIT 2];
+       // List<Race_Result__c> raceResultRecords = [SELECT Position__c, Grid__c, Is_Fastest_Lap__c FROM Race_Result__c LIMIT 2];
       //  System.debug(records[1] + records[2]);
-       /* Race_Result__c correctRaceResult = new Race_Result__c(
-            Position__c = 1, Grid__c = 1, Is_Fastest_Lap__c = true);
         Race_Result__c correctRaceResult = new Race_Result__c(
-            Position__c = 2, Grid__c = 2, Is_Fastest_Lap__c = false);*/
+            Position__c = 1, Grid__c = 1, Is_Fastest_Lap__c = true);
+        Race_Result__c failRaceResult = new Race_Result__c(
+            Position__c = 2, Grid__c = 2, Is_Fastest_Lap__c = false);
 
         Test.startTest();
-        Boolean resultTrue = FormulaOneServices.isHatTrick(records.get(0));
-        Boolean resultFalse = FormulaOneServices.isHatTrick(records.get(1));
+        Boolean resultTrue = FormulaOneServices.isHatTrick(correctRaceResult);
+        Boolean resultFalse = FormulaOneServices.isHatTrick(failRaceResult);
         Test.stopTest();
 
-        System.assertEquals(true, resultTrue, 'FormulaOneServices.isHatTrickTest TEST FAILURE');
-        System.assertEquals(false, resultFalse, 'FormulaOneServices.isHatTrickTest NEGATIVE TEST FAILURE');
+        System.assertEquals(true, resultTrue, 
+                            'FormulaOneServices.isHatTrickTest TEST FAILURE');
+        System.assertEquals(false, resultFalse, 
+                            'FormulaOneServices.isHatTrickTest NEGATIVE TEST FAILURE');
+
 
     }
+    
+    @isTest
+    static void createDriverTest() {
+        Driver__c newDriver = new Driver__c(
+            First_Name__c='Test', Last_Name__c='Driver', Age__c = 19);
+
+        Test.startTest();
+        FormulaOneServices.createDriver(
+            String.valueOf(newDriver.First_Name__c), 
+            String.valueOf(newDriver.Last_Name__c), 
+            Integer.valueOf(newDriver.Age__c));
+        Test.stopTest();
+
+        Driver__c queryDriver = [SELECT Id, First_Name__c, Last_Name__c, Age__c FROM Driver__c 
+            WHERE First_Name__c=: newDriver.First_Name__c 
+            AND Last_Name__c=: newDriver.Last_Name__c 
+            AND Age__c=: newDriver.Age__c
+            LIMIT 1];
+
+        System.assertEquals(newDriver.First_Name__c, queryDriver.First_Name__c, 
+        					'FormulaOneServices.createDriverTest First_Name__c TEST FAILURE');
+        System.assertEquals(newDriver.Last_Name__c , queryDriver.Last_Name__c, 
+        					'FormulaOneServices.createDriverTest Last_Name__c TEST FAILURE');
+        System.assertEquals(newDriver.Age__c, queryDriver.Age__c, 
+        					'FormulaOneServices.createDriverTest Age__c TEST FAILURE');
+    }
+
+    @isTest
+    static void createDriversTest() {
+       Driver__c newDriver = new Driver__c(
+            First_Name__c='Test', Last_Name__c='Driver_DTO', Age__c = 19);
+        
+        List<DriverDTO> drivers = new List<DriverDTO>();
+        drivers.add(new DriverDTO(
+         	String.valueOf(newDriver.First_Name__c) + '_1', 
+            String.valueOf(newDriver.Last_Name__c), 
+            Integer.valueOf(newDriver.Age__c+1)));
+        
+        drivers.add(new DriverDTO(
+         	String.valueOf(newDriver.First_Name__c) + '_2', 
+            String.valueOf(newDriver.Last_Name__c), 
+            Integer.valueOf(newDriver.Age__c)));
+        
+        
+        Test.startTest();
+        FormulaOneServices.createDrivers(drivers);
+        Test.stopTest();
+
+        List <Driver__c> queryDrivers = [
+            SELECT First_Name__c, Last_Name__c, Age__c FROM Driver__c
+            WHERE Last_Name__c='Driver_DTO'];
+
+        System.assertEquals(2, queryDrivers.size(), 
+        					'FormulaOneServices.createDriversTest size TEST FAILURE');
+/*		System.Assert.areEqual(drivers, queryDrivers, 
+        					'FormulaOneServices.createDriversTest objects TEST FAILURE');
+*/
+        System.assertEquals(drivers.get(1).firstName, queryDrivers.get(1).First_Name__c, 
+        					'FormulaOneServices.createDriversTest First_Name__c TEST FAILURE');
+        System.assertEquals(drivers.get(1).lastName, queryDrivers.get(1).Last_Name__c, 
+        					'FormulaOneServices.createDriversTest Last_Name__c TEST FAILURE');
+        System.assertEquals(drivers.get(1).age, queryDrivers.get(1).Age__c, 
+        					'FormulaOneServices.createDriversTest Age__c TEST FAILURE');
+       
+    }
+    
+     @isTest
+     static void updateDriverNameTest() {
+ 		Driver__c newDriver = new Driver__c(
+        First_Name__c='Test', Last_Name__c='Driver');
+        Driver__c queryDriver = [SELECT id, First_Name__c, Last_Name__c FROM Driver__c LIMIT 1];
+
+        Test.startTest();
+        Driver__c testDriver = FormulaOneServices.updateDriverName(queryDriver.Id, newDriver.First_Name__c, newDriver.Last_Name__c);
+        Test.stopTest();
+
+        System.assertEquals(queryDriver.Id, testDriver.Id,
+        					'FormulaOneServices.updateDriverNameTest id TEST FAILURE');
+        System.assertEquals(newDriver.First_Name__c, testDriver.First_Name__c,
+        					'FormulaOneServices.updateDriverNameTest First_Name__c TEST FAILURE');
+        System.assertEquals(newDriver.Last_Name__c, testDriver.Last_Name__c,
+        					'FormulaOneServices.updateDriverNameTest Last_Name__c TEST FAILURE');
+    }
+    
 
 }
