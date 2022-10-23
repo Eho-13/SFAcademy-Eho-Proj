@@ -88,8 +88,9 @@ public class FormulaOneServices {
 [SELECT Racer__c, Position__c, Grand_Prix__r.Winner__c, Grand_Prix__r.Podium_Second__c, Grand_Prix__r.Podium_Third__c
 FROM Race_Result__c WHERE Grand_Prix__r.Id IN :raceIds AND Position__c <= 3]
 */
-        For(Race_Result__c drv: drivers){
-            For(Race__c race: races){
+        System.debug('raceIds - ' + raceIds);
+        For(Race__c race: races){
+        	For(Race_Result__c drv: drivers){
                 if(race.id == drv.Grand_Prix__c){
                     switch on drv.Position__c.intValue(){
                         when 1 {
@@ -104,12 +105,12 @@ FROM Race_Result__c WHERE Grand_Prix__r.Id IN :raceIds AND Position__c <= 3]
                         when else {
                             System.debug('FormulaOneServices.updateGrandPrixWinners SOME Racer__C.Position__c ERROR');
                         }
-                    }
-                    racesCorrection.add(race);
+                    }                   
                 }
             }
+            racesCorrection.add(race);
         }
-
+		System.debug('racesCorrection - ' + racesCorrection);
         try {
             update racesCorrection;
         } catch(DmlException e) {
