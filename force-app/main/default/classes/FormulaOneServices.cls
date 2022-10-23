@@ -4,8 +4,8 @@ public class FormulaOneServices {
         List<String> stringFields = new List<String>();
         for(SObjectField tempfield: fields){
            stringFields.add(
-            (string) record.get(tempfield)
-        );
+            String.valueOf(record.get(tempfield))
+        	);
         }
 		
         string key = '';
@@ -63,11 +63,7 @@ public class FormulaOneServices {
 
     Public static Driver__c updateDriverName(id driverId, String newFirstName, String newLastName){
         Driver__c drv = new Driver__c();
-        //Зайвий запит
-        /*Driver__c drv = [SELECT Id, First_Name__c, Last_Name__c FROM Driver__c WHERE Id = :driverId LIMIT 1];
-        drv.First_Name__c = newFirstName;
-        drv.Last_Name__c = newLastName;*/
-        // Додав перевірку на НЕпорожні параметри
+       
         if(driverId != NULL && newFirstName != NULL && newLastName != NULL){
             drv = new Driver__c(id = driverId, First_Name__c = newFirstName, Last_Name__c = newLastName);
         
