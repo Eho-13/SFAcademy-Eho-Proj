@@ -2,92 +2,123 @@
 private class FormulaOneServicesTest {
 
 @TestSetup
-    static void dataSetup(){
-      //  TestDataFactory.createTestData();
-          
-      List<Race__c> racesList = new List<Race__c>();
+    static void dataSetup(){     
+        
       List<Driver__c> driversList = new List<Driver__c>();
-  
-      for (Integer i = 0; i==6; i++) {
+     /* for (Integer i = 0; i==6; i++) {
           driversList.add(new Driver__c(
-              First_Name__c = 'First_name_' + i,
-              Last_Name__c = 'Last_name_' + i,
-              Age__c = i + 17
+              First_Name__c = 'Test_' + i,
+              Last_Name__c = 'Driver_' + i,
+              Age__c = i + 19
           ));
-      }       
-   
+      }  */
+      driversList.add(new Driver__c(
+          First_Name__c = 'Test_1',
+          Last_Name__c = 'Driver_1',
+          Age__c =  20,
+          Hat_Tricks__c = 0,
+          Is_Qualified__c = True));
+     driversList.add(new Driver__c(
+          First_Name__c = 'Test_2',
+          Last_Name__c = 'Driver_2',
+          Age__c =  19,
+          Hat_Tricks__c = 0,
+          Is_Qualified__c = True));
+     driversList.add(new Driver__c(
+          First_Name__c = 'Test_3',
+          Last_Name__c = 'Driver_3',
+          Age__c =  35,
+          Hat_Tricks__c = 0,
+          Is_Qualified__c = True));
+    driversList.add(new Driver__c(
+          First_Name__c = 'Test_4',
+          Last_Name__c = 'Driver_4',
+          Age__c =  33,
+          Hat_Tricks__c = 0,
+          Is_Qualified__c = True));
+/*    driversList.add(new Driver__c(
+          First_Name__c = 'Test_5',
+          Last_Name__c = 'Driver_5',
+          Age__c =  23,
+          Hat_Tricks__c = 0,
+          Is_Qualified__c = True));
+    driversList.add(new Driver__c(
+          First_Name__c = 'Test_6',
+          Last_Name__c = 'Driver_6',
+          Age__c =  22,
+          Hat_Tricks__c = 0,
+          Is_Qualified__c = True));*/
+      insert driversList;
+        
+   	  List<Race__c> racesList = new List<Race__c>();
       racesList.add(new Race__c(        
           Name = 'Grond_prix_name_1',
           Track__c = 'AVUS',
           Date__c = Date.newInstance(2022, 10, 19),
           Laps__c  =  3,
-          Status__c = 'Active'
-      ));
+          Status__c = 'Active'));
       racesList.add(new Race__c(        
           Name = 'Grond_prix_name_2',
           Track__c = 'Circuit de Monaco',
           Date__c = Date.newInstance(2022, 01, 05),
           Laps__c  =  5,
-          Status__c = 'Completed'
-      ));
+          Status__c = 'Completed'));
       racesList.add(new Race__c(        
           Name = 'Grond_prix_name_3',
           Track__c = 'Mosport Park', 
           Date__c = Date.newInstance(2023, 06, 03),
           Laps__c  =  7,
-          Status__c = 'Active'
-      ));
+          Status__c = 'Active'));
       racesList.add(new Race__c(        
           Name = 'Grond_prix_name_4',
           Track__c = 'Nurburgring',
           Date__c = Date.newInstance(2099, 01, 01),
           Laps__c  =  1 ,
-          Status__c =  'Completed'
-      ));
-          
-      insert driversList;
+          Status__c =  'Completed'));
       insert racesList;
-
-
         
       List<Id> drvsId = new List<Id>(new Map<Id, Driver__c>([SELECT id FROM Driver__c]).keySet());
  	  List<Id> rcsId = new List<Id>(new Map<Id, Race__c>([SELECT id FROM Race__c]).keySet());
      
       List<Race_Result__c> raceResultsList = new List<Race_Result__c>();
-
       For(Id r: rcsId){
-          integer driverPosition = 1;
-          Boolean fastestLap = true;
-          for (id d : drvsId) {
-              raceResultsList.add(new Race_Result__c(
-                  Grand_Prix__c = r,
-                  Grid__c = driverPosition,                    
-                  Is_Fastest_Lap__c = fastestLap,
-                  Position__c = driverPosition,
-                  // Name = String.valueOf(d + '_' + driverPosition),
-                  Racer__c = d
-              ));
-              fastestLap = false;
-              driverPosition++;
+          if(r != NULL){
+              integer driverPosition = 1;
+              Boolean fastestLap = true;
+              for (id d : drvsId) {
+                  raceResultsList.add(new Race_Result__c(
+                      Grand_Prix__c = r,
+                      Grid__c = driverPosition,                    
+                      Is_Fastest_Lap__c = fastestLap,
+                      Position__c = driverPosition,
+                      // Name = String.valueOf(d + '_' + driverPosition),
+                      Racer__c = d
+                  ));
+                  
+                  System.debug('Race-(' + r + ') Position-' + driverPosition + ' Driver-[' + d + ']');
+                  fastestLap = false;
+                  driverPosition++;
+              }
           }
       }
+	System.debug(raceResultsList);
       insert raceResultsList;
     }
 
     @isTest 
     static void generateKeyTest() {
-        //sObject testsObj = new sObject();
         Map <String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
-        String objectName='Race__c';
+        String objectName='Driver__c';
         Map<String, Schema.SObjectField> fieldMap = schemaMap.get(ObjectName).getDescribe().fields.getMap();
 
         List<sObjectField> testFieldsList = new list<SObjectField>();
-        testFieldsList.add(fieldMap.get('Name'));
-        testFieldsList.add(fieldMap.get('Track__c'));
+        testFieldsList.add(fieldMap.get('First_Name__c'));
+        testFieldsList.add(fieldMap.get('Last_Name__c'));
+		testFieldsList.add(fieldMap.get('Age__c'));
         
-        Race__c testsObj = [SELECT Name,Track__c FROM Race__c LIMIT 1];
+        Driver__c testsObj = [SELECT First_Name__c, Last_Name__c, Age__c FROM Driver__c LIMIT 1];
 
-        string expectedResult = 'Grond_prix_name_1---AVUS';
+        string expectedResult = 'Test_1---Driver_1---20';
 
         Test.startTest();
             String testResult = FormulaOneServices.generateKey(testsObj, testFieldsList, '---');
@@ -187,19 +218,25 @@ private class FormulaOneServicesTest {
      static void updateDriverNameTest() {
  		Driver__c newDriver = new Driver__c(
         First_Name__c='Test', Last_Name__c='Driver');
-        Driver__c queryDriver = [SELECT id, First_Name__c, Last_Name__c FROM Driver__c LIMIT 1];
-
+        Driver__c[] queryDriver = [SELECT id, First_Name__c, Last_Name__c FROM Driver__c LIMIT 1];
+      	String qDriverId;
+         if (queryDriver.size() > 0){
+             qDriverId = queryDriver[0].Id;
+         }
+		
+         
         Test.startTest();
-        Driver__c testDriver = FormulaOneServices.updateDriverName(queryDriver.Id, newDriver.First_Name__c, newDriver.Last_Name__c);
+        Driver__c testDriver = FormulaOneServices.updateDriverName(qDriverId, newDriver.First_Name__c, newDriver.Last_Name__c);
         Test.stopTest();
 
-        System.assertEquals(queryDriver.Id, testDriver.Id,
+        System.assertEquals(qDriverId, testDriver.Id,
         					'FormulaOneServices.updateDriverNameTest id TEST FAILURE');
         System.assertEquals(newDriver.First_Name__c, testDriver.First_Name__c,
         					'FormulaOneServices.updateDriverNameTest First_Name__c TEST FAILURE');
         System.assertEquals(newDriver.Last_Name__c, testDriver.Last_Name__c,
         					'FormulaOneServices.updateDriverNameTest Last_Name__c TEST FAILURE');
     }
+    
     
 
 }

@@ -48,15 +48,20 @@ public class raceResultMultiConditionTriggerHandler {
         Set<String> allTriggeredDriversId = new Set<String>();
         list<Race_Result__c> allTriggeredRaces = new list<Race_Result__c>();
         Map<String, List<Race_Result__c>> raceAndResultsMap = new Map<String, List<Race_Result__c>>();
-
+ 
+        System.debug('---driverPositionCheck.triggeredRaceResults' + triggeredRaceResults);
         for(Race_Result__c r: triggeredRaceResults){
             allTriggeredDriversId.add(r.Grand_Prix__c);
         }
-
+		System.debug('---driverPositionCheck.allTriggeredDriversId' + allTriggeredDriversId);
         allTriggeredRaces = [SELECT Grand_Prix__r.Name, Racer__r.Name, Position__c
                              FROM Race_Result__c 
                              WHERE Grand_Prix__c IN :allTriggeredDriversId];
-
+		// i spend 4 hours to add this check!
+        if (allTriggeredRaces.isEmpty()) {
+            allTriggeredRaces = triggeredRaceResults;
+        }
+        
         for(Race_Result__c r: allTriggeredRaces) {
             if (raceAndResultsMap.containsKey(r.Grand_Prix__c)) {
                 raceAndResultsMap.get(r.Grand_Prix__c).add(r);
