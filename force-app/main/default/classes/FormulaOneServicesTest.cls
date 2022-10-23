@@ -237,6 +237,41 @@ private class FormulaOneServicesTest {
         					'FormulaOneServices.updateDriverNameTest Last_Name__c TEST FAILURE');
     }
     
-    
+      @isTest
+    static void updateGrandPrixWinnersTest() {
+        Map<Id, Race__c> racesAndWinnersMap = new Map<Id, Race__c>([SELECT Id, (
+            SELECT Racer__r.Id, Position__c 
+            FROM Racing_Results__r
+            WHERE Position__c <= 3
+            ORDER BY Position__c) FROM Race__c]);
+/*        
+        set<id> raceIds = new Set()[SELECT Grand_Prix__r.id FROM Race_Result__c WHERE Position__c <= 3];
+		list<Race__c> races = [SELECT winer__c, Podium_Second__c, Podium_Third__c FROM Race__c where id IN :raceIds];
+        list<Race_Result__c> drivers = [SELECT Grand_Prix__c, Position__c, Racer__c FROM Race_Result__c WHERE Grand_Prix__c IN :raceIds AND Position__c <= 3]
+*/
+        Test.startTest();
+        List<Race__c> testRaces = FormulaOneServices.updateGrandPrixWinners(racesAndWinnersMap.keySet());
+        Test.stopTest();
+
+        Set<Id> racesIds = new Set<Id>();
+        for (Race__c r: racesAndWinnersMap.values()) {
+            for (Race__c t: testRaces) {
+                if (r.Id == t.Id) {
+                    racesIds.add(r.Id);
+					List<Race_Result__c> raceResult = r.Racing_Results__r;
+                    
+                    System.assertEquals(raceResult.get(0).Racer__c, t.Winer__c,
+                                        'FormulaOneServices.updateGrandPrixWinnersTest Winer__c TEST FAILURE');
+                    System.assertEquals(raceResult.get(1).Racer__c, t.Podium_Second__c,
+                                        'FormulaOneServices.updateGrandPrixWinnersTest Podium_Second__c TEST FAILURE');
+                    System.assertEquals(raceResult.get(2).Racer__c, t.Podium_Third__c,
+                                        'FormulaOneServices.updateGrandPrixWinnersTest Podium_Third__c TEST FAILURE');
+                }
+            }
+        }
+
+        System.assertEquals(racesIds, racesAndWinnersMap.keySet(),
+        					'FormulaOneServices.updateGrandPrixWinnersTest ID-SET TEST FAILURE');
+    }
 
 }
