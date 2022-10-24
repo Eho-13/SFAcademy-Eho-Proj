@@ -1,4 +1,4 @@
-public class FormulaOneDAO {
+public with sharing class FormulaOneDAO {
     // test driverid = a027Q0000061zcxQAA for Hadgehoc, Sonic
     public static Driver__c getDriver(Id driverId){
         return [SELECT Age__c, CreatedById, Name, First_Name__c, Full_Name__c, Hat_Tricks__c, Is_Qualified__c, LastModifiedById, Last_Name__c, OwnerId FROM Driver__c WHERE Id = :driverId];
@@ -11,36 +11,42 @@ public class FormulaOneDAO {
 
     
     public static set<String> getDriverCircuits(Id driverId){
-        List<sObject> qrez = [SELECT Grand_Prix__r.Name FROM Race_Result__c WHERE Racer__c = :driverId];
-                
-        set<String> rezSet = new set<String>();
-
-        for(sObject tempObj: qrez){
-            rezSet.add(String.valueOf(tempOBj.get('Name')));
+ 		List<Race_Result__c> qResults = [SELECT Grand_Prix__r.Name FROM Race_Result__c WHERE Racer__c = :driverId];
+        Set<String> resultNamesSet = new Set<String>();
+        
+        for (Race_Result__c r: qResults) {
+            resultNamesSet.add(r.Grand_Prix__r.Name);
         }
 
-        return rezSet;
+        return resultNamesSet;
 
     }
-
-    //SELECT Name, Age__C FROM Driver__c WHERE 
-		//Id IN (SELECT winer__c FROM Race__c WHERE id = 'a007Q00000BTRTbQAP') OR
-		//Id IN (SELECT Podium_Second__c FROM Race__c WHERE id = 'a007Q00000BTRTbQAP') OR
-		//Id IN (SELECT Podium_Third__c FROM Race__c WHERE id = 'a007Q00000BTRTbQAP')
-		//ORDER BY Age__c
-        //list<sObject> driversOnRace = new list<Object>{};
-      
-        //SELECT  Winer__r.Age__c, Podium_Second__r.Age__c, Podium_Third__r.Age__c FROM Race__c WHERE id = 'a007Q00000BTRTbQAP'
-      
+     
     public static Driver__c getYoungestDriverOnRace(Id raceId){
-        return [SELECT Name, Age__C FROM Driver__c 
-                WHERE Id IN (SELECT 
-                Racer__c FROM Race_Result__c WHERE Grand_Prix__c = :raceId) 
-                ORDER BY Age__c 
-                LIMIT 1];
+        return [SELECT Name, Age__C FROM Driver__c  
+                WHERE Id IN 
+               (SELECT Racer__c FROM Race_Result__c 
+                WHERE Grand_Prix__c = :raceId) 
+                ORDER BY Age__c LIMIT 1];
     }
     
-   /* public Map<String, List<String>> getAllDriversByCircuit(){
+   
+    public static Map<String, List<String>> getAllDriversByCircuit(){
+        Map<String, list<String>> AllDriversByCircuit = new Map<String, list<String>>();
+        List<Race_Result__c> raceRezList =[SELECT Grand_Prix__r.Name, Racer__r.Name FROM Race_Result__c];
+        
+        For(Race_Result__c tempRaceRez: raceRezList){
+            if(AllDriversByCircuit.containsKey(tempRaceRez.Grand_Prix__r.Name)){
+                AllDriversByCircuit.get(tempRaceRez.Grand_Prix__r.Name).add(tempRaceRez.Racer__r.Name);
+            } else {
+                AllDriversByCircuit.put(tempRaceRez.Grand_Prix__r.Name, new List<String>{tempRaceRez.Racer__r.Name});
+            }
+        }
+       
+        return AllDriversByCircuit;
+    }
+    /* Old version
+   public Map<String, List<String>> getAllDriversByCircuit(){
         Map<String, list<String>> AllDriversByCircuit = new Map<String, list<String>>();
         List<sObject> raceRezList = new List<sObject>{
             Database.query('SELECT Grand_Prix__r.Name, Racer__r.Name FROM Race_Result__c ORDER BY Grand_Prix__r.Name')
@@ -66,19 +72,5 @@ public class FormulaOneDAO {
         AllDriversByCircuit.put(oldRaceName, curRaceDrivers);
         return AllDriversByCircuit;
     }*/
-    public Map<String, List<String>> getAllDriversByCircuit(){
-        Map<String, list<String>> AllDriversByCircuit = new Map<String, list<String>>();
-        List<Race_Result__c> raceRezList =[SELECT Grand_Prix__r.Name, Racer__r.Name FROM Race_Result__c];
-        
-        For(Race_Result__c tempRaceRez: raceRezList){
-            if(AllDriversByCircuit.containsKey(tempRaceRez.Grand_Prix__r.Name)){
-                AllDriversByCircuit.get(tempRaceRez.Grand_Prix__r.Name).add(tempRaceRez.Racer__r.Name);
-            } else {
-                AllDriversByCircuit.put(tempRaceRez.Grand_Prix__r.Name, new List<String>{tempRaceRez.Racer__r.Name});
-            }
-        }
-       
-        return AllDriversByCircuit;
-    }
 
 }
