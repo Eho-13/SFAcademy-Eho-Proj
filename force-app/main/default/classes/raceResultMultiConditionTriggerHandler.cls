@@ -18,7 +18,7 @@ public class raceResultMultiConditionTriggerHandler {
                               WHERE Is_Fastest_Lap__c = True AND Position__c = 1 AND Grand_Prix__c 
                               IN :allTriggeredDriversId];*/
 
-        driversHadHatTrick = [SELECT Racer__r.id, Count(Racer__r.Hat_tricks__c) hatTricksCounter
+        driversHadHatTrick = [SELECT Racer__r.id, Count(name) hatTricksCounter
                               FROM Race_Result__C 
                               WHERE Is_Fastest_Lap__c = True AND Position__c = 1 
                               AND Racer__r.id IN :allTriggeredDriversId
