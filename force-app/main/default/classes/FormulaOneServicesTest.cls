@@ -5,7 +5,7 @@ private class FormulaOneServicesTest {
     static void dataSetup(){     
         
       List<Driver__c> driversList = new List<Driver__c>();
-     /* for (Integer i = 0; i==6; i++) {
+     /* for (Integer i = 0; i>=6; i++) {
           driversList.add(new Driver__c(
               First_Name__c = 'Test_' + i,
               Last_Name__c = 'Driver_' + i,
@@ -83,9 +83,9 @@ private class FormulaOneServicesTest {
       List<Race_Result__c> raceResultsList = new List<Race_Result__c>();
       For(Id r: rcsId){
           if(r != NULL){
-              integer driverPosition = 1;
+              Integer driverPosition = 1;
               Boolean fastestLap = true;
-              for (id d : drvsId) {
+              for (Id d : drvsId) {
                   raceResultsList.add(new Race_Result__c(
                       Grand_Prix__c = r,
                       Grid__c = driverPosition,                    
