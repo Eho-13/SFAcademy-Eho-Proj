@@ -6,8 +6,8 @@ const columns = [
 ];
 
 export default class driverRacingResults extends LightningElement {
-    @api recordId;
-    data = [];
+    @api recordId;  //Unexpected '@'. (E024)
+    data = [];      //Class properties must be methods. Expected '(' but instead saw '='. (E054)
     columns = columns;
 
     isError = false;
@@ -15,7 +15,7 @@ export default class driverRacingResults extends LightningElement {
 
     async connectedCallback() {
         try {
-            const response = await getDriverWinRaceResults({driverId : this.recordId});    
+            const response = await getDriverWinRaceResults({driverId : this.recordId});  //Missing semicolon. (E058)  
             this.data = response;
         } catch (error) {
             this.isError = true;
