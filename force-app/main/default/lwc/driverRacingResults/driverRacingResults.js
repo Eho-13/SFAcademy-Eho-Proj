@@ -5,9 +5,9 @@ const columns = [
     { label: 'Grand Prix Name', fieldName: 'Grand_Prix__r.Name',  type: 'text' },
 ];
 
-export default class DriverRacingResults extends LightningElement {
+export default class driverRacingResults extends LightningElement {
     @api recordId;
-    data = data;
+    data = [];
     columns = columns;
 
     isError = false;
