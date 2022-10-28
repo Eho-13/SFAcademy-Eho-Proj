@@ -1,0 +1,22 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        <template if:true={isLoaded}>
+                <h3 class="slds-text-heading_large slds-text-align_left">
+                    Driver Win Races
+                </h3>
+                <lightning-datatable
+                    data={data}
+                    columns={columns}
+                    key-field="id"
+                    >
+                </lightning-datatable>
+            </template>
+
+        <template if:true={isError}>
+            <h2 class="slds-text-color_error">
+               Some ERROR. Check console.log
+            </h2>
+        </template>
+
+    </div>
+</template>
