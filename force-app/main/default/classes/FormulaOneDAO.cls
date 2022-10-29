@@ -92,7 +92,8 @@ public with sharing class FormulaOneDAO {
       SELECT
         Id,
         Name,
-        Grand_Prix__r.Name
+        Grand_Prix__r.Name,
+        Position__c
       FROM Race_Result__c
       WHERE Racer__c = :driverId AND Position__c = 1
     ];
