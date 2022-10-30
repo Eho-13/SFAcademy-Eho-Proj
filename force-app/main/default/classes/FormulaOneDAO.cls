@@ -98,4 +98,31 @@ public with sharing class FormulaOneDAO {
       WHERE Racer__c = :driverId AND Position__c = 1
     ];
   }
+
+
+  @AuraEnabled
+  public static String getRaceTrackWeather(Id raceId) {
+    Race__c race = [
+      SELECT Track__c 
+      FROM Race__c 
+      WHERE Id = :raceId
+    ];
+
+    HttpRequest request = new HttpRequest();
+
+    request.setMethod('GET');
+    request.setEndpoint('https://avenga-school.herokuapp.com/weather');
+    request.setHeader('trackName', race.Track__c);
+
+    HttpResponse response = new Http().send(request);
+
+    if (response.getStatusCode() == 200) {
+      System.debug(response.getStatusCode());
+      System.debug(response.getBody());
+        return response.getBody();
+    } else {
+      System.debug(response.getStatusCode());
+        return '{"statusCode":'+ response.getStatusCode() + '}';
+    }
+  }
 }
