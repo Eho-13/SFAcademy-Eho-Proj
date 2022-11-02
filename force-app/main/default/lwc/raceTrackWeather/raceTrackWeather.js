@@ -15,7 +15,7 @@ export default class RaceTrackWeather extends LightningElement {
                 const data = JSON.parse(response);
                 if (response.data !== '') {
                     if(data.metric == 'fahrenheit') {
-                        const celsius = Math.round(((data.temp - 32) * 5 / 9)*100)/100;
+                        const celsius = Math.round(((data.temp - 32) * 5 / 9)*10)/10;
                         this.weater = '°C: ' + celsius;  
                     } else {
                         this.weater = '°c: ' + data.temp; 
