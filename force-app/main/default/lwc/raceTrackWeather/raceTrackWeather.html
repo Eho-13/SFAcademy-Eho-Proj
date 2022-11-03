@@ -1,13 +1,21 @@
 <template>
-    <div class="slds-clearfix">
-        <div class="slds-float_left slds-m-vertical_small slds-m-horizontal_x-small">                  
-            <template if:false={isError}>
-                <lightning-badge label={weater} class="slds-badge_lightest"></lightning-badge>   
-            </template> 
+  <div class="slds-clearfix">
+    <div
+      class="slds-float_left slds-m-vertical_small slds-m-horizontal_x-small"
+    >
+      <template if:false={isError}>
+        <lightning-badge
+          label={weater}
+          class="slds-badge_lightest"
+        ></lightning-badge>
+      </template>
 
-            <template if:true={isError}>
-                <lightning-badge label="Error" class="slds-badge slds-theme_error"></lightning-badge>
-            </template>
-        </div>
+      <template if:true={isError}>
+        <lightning-badge
+          label="Error"
+          class="slds-badge slds-theme_error"
+        ></lightning-badge>
+      </template>
     </div>
+  </div>
 </template>

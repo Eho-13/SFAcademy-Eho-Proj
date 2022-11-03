@@ -89,22 +89,17 @@ public with sharing class FormulaOneDAO {
   @AuraEnabled
   public static List<Race_Result__c> getDriverWinRaceResults(Id driverId) {
     return [
-      SELECT
-        Id,
-        Name,
-        Grand_Prix__r.Name,
-        Position__c
+      SELECT Id, Name, Grand_Prix__r.Name, Position__c
       FROM Race_Result__c
       WHERE Racer__c = :driverId AND Position__c = 1
     ];
   }
 
-
   @AuraEnabled
   public static String getRaceTrackWeather(Id raceId) {
     Race__c race = [
-      SELECT Track__c 
-      FROM Race__c 
+      SELECT Track__c
+      FROM Race__c
       WHERE Id = :raceId
     ];
 
@@ -119,10 +114,10 @@ public with sharing class FormulaOneDAO {
     if (response.getStatusCode() == 200) {
       System.debug(response.getStatusCode());
       System.debug(response.getBody());
-        return response.getBody();
+      return response.getBody();
     } else {
       System.debug(response.getStatusCode());
-        return '{"statusCode":'+ response.getStatusCode() + '}';
+      return '{"statusCode":' + response.getStatusCode() + '}';
     }
   }
 }
